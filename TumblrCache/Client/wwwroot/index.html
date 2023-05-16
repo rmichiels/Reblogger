@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>TumblrCache</title>
+    <base href="/" />
+    <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/app.css" rel="stylesheet" />
+    <link href="css/style.css" rel="stylesheet" />
+    <link href="TumblrCache.Client.styles.css" rel="stylesheet" />
+    <link href="css/skeleton.css" rel="stylesheet" />
+    <script src="lib/jszip.min.js" defer></script>
+    <script src="lib/FileSaver.min.js" defer></script>
+</head>
+
+<body>
+    <div id="app">
+        <div class="page" style="height:100vh">
+            <div align="center" class="container">
+                <button class="skeleton-button"></button>
+                <button class="skeleton-button"></button>
+                <button class="skeleton-button"></button>
+                <button class="skeleton-button"></button>
+                <button class="skeleton-button"></button>
+                <div style="
+                    font-family:'space-mono';
+                    position:absolute;
+                    left:0;
+                    right:0;
+                    margin-left:auto;
+                    margin-right:auto;
+                    top:105%;
+                ">
+                    A  <a href="https://www.tumblr.com/swissknifesolutions">Swissknifesolutions</a> Tool - 2023 - <a href="">Repository</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="blazor-error-ui" hidden>
+        An unhandled error has occurred.
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
+    <script>
+        window.triggerFileDownload = (fileName, url) => {
+            const anchorElement = document.createElement('a');
+            anchorElement.href = url;
+            anchorElement.download = fileName ?? '';
+            anchorElement.click();
+            anchorElement.remove();
+        }
+    </script>
+    <script>
+        window.generateZIP = async (namedFileStreams) => {
+            var zip = new JSZip();
+            var archiveName;
+            for (var key in namedFileStreams) {
+                var stream = namedFileStreams[key];
+                if (stream == null) {
+                    archiveName = key;
+                }
+                else {
+                    var arrayBuffer = await namedFileStreams[key].arrayBuffer();
+                    zip.file(key, new Blob([arrayBuffer]), { binary: true });
+                }
+            }
+            await zip.generateAsync({ type: 'blob' }).then(function (content) {
+                saveAs(content, archiveName);
+            });
+        }
+    </script>
+    <script src="_framework/blazor.webassembly.js"></script>
+
+</body>
+
+</html>

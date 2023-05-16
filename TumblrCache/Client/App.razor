@@ -1,0 +1,17 @@
+﻿@inject NavigationManager navigator
+
+<Router AppAssembly="@typeof(App).Assembly">
+    <Found Context="routeData">
+        <PageTitle>Re:blogger</PageTitle>
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(EmptyLayout)" />
+        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+    </Found>
+    <NotFound>
+        <PageTitle>Re:blogger</PageTitle>
+        <LayoutView Layout="@typeof(EmptyLayout)">
+            @{
+                navigator.NavigateTo("/flow", false);
+            }
+        </LayoutView>
+    </NotFound>
+</Router>

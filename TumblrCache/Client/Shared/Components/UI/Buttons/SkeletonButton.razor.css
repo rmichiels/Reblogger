@@ -1,0 +1,37 @@
+﻿button {
+    --border-button-radius: 3px;
+    --background-colour: white;
+    --spacing: 8px;
+    --button-height: calc(var(--spacing)*6.5);
+    --font-size: 16px;
+}
+
+.skeleton-button {
+    width: 100%;
+    padding: 4px calc(var(--spacing) * 2);
+    margin-top: calc(var(--spacing) * 3);
+    min-height: var(--button-height);
+    font-size: var(--font-size);
+    outline: none;
+    cursor: pointer;
+    border-radius: var(--button-border-radius);
+    background-color: var(--background-colour);
+    border-width: 2px;
+    border-style: solid;
+    box-shadow: 5px 5px 0px 0px var(--primary);
+    border-color: var(--primary);
+    animation: skeleton-loading 1s linear infinite alternate;
+    pointer-events: none;
+}
+
+@keyframes skeleton-loading {
+    0% {
+        border-color: hsl(200, 20%, 80%);
+        box-shadow: 5px 5px 0px 0px hsl(200, 20%, 80%);
+    }
+
+    100% {
+        border-color: hsl(200, 20%, 95%);
+        box-shadow: 5px 5px 0px 0px hsl(200, 20%, 95%);
+    }
+}

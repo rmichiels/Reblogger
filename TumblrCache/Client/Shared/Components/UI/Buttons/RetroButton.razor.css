@@ -1,0 +1,51 @@
+﻿button {
+    --border-button-radius: 3px;
+    --background-colour: white;
+    --spacing: 8px;
+    --button-height: calc(var(--spacing)*6.5);
+    --font-size: 16px;
+}
+
+.retrobutton {
+    width: 100%;
+    padding: 4px calc(var(--spacing) * 2);
+    margin-top: calc(var(--spacing) * 3);
+    min-height: var(--button-height);
+    font-size: var(--font-size);
+    outline: none;
+    cursor: pointer;
+    border-radius: var(--button-border-radius);
+    background-color: var(--background-colour);
+    font-family: "space-mono";
+}
+
+.rb-filled {
+    color: var(--button-font-color);
+    border: 0;
+    background-color: var(--primary-color);
+}
+
+    .rb-filled:hover {
+        background-color: var(--primary-color-accent);
+    }
+
+.rb-shadowed:enabled {
+    border-width: 2px;
+    border-style: solid;
+    box-shadow: 5px 5px 0px 0px var(--primary);
+    border-color: var(--primary);
+    transition: border-color .175s ease-in-out,box-shadow .175s ease-in-out;
+    pointer-events: all;
+}
+
+.rb-shadowed:disabled {
+    --primary: "#B3C7D9";
+    box-shadow: 5px 5px 0px 0px #B3C7D9;
+    border-color: #B3C7D9 !important;
+    pointer-events: none;
+}
+
+.rb-shadowed:hover {
+    box-shadow: 10px 10px 0px 0px var(--accent);
+    border-color: var(--accent);
+}

@@ -1,0 +1,16 @@
+﻿.container {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    margin: auto;
+    width: 500px;
+    min-height: 520px;
+    border-style: solid;
+    border-width: 2px;
+    border-color: #5200FF;
+    border-radius: 5px;
+    padding: 64px 16px 64px 16px;
+    box-sizing: border-box;
+    background-color: white;
+    background: #fefefe url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPoAAAD6AQMAAACyIsh+AAAABlBMVEUAAAD8/vwnjUF/AAAAAXRSTlMAQObYZgAAAAlwSFlzAAAOxAAADsQBlSsOGwAAADVJREFUaIHtykERAAAIA6D1T2Uz18AAHrzJ3iaCIAiCIAiCIAiCIAiCIAiCIAiCIAiCIPwNBWLV5P2T2ph8AAAAAElFTkSuQmCC);
+}

@@ -1,0 +1,26 @@
+﻿@layout EmptyLayout
+@page "/redirect"
+
+<Skeleton />
+
+@code {
+    [Inject]
+    public NavigationManager Navigator { get; set; }
+    [Inject]
+    public HttpClient Client { get; set; }
+
+    [Parameter]
+    public string? Code { get; set; }
+    [Parameter]
+    public string? State { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var uri = Navigator.ToAbsoluteUri(Navigator.Uri);
+        QueryHelpers.ParseQuery(uri.Query).TryGetValue("code", out var code);
+        QueryHelpers.ParseQuery(uri.Query).TryGetValue("state", out var state);
+        await Tumblr.Handover(code, Navigator.BaseUri);
+        await Tumblr.GetUser();
+        Navigator.NavigateTo("/flow");
+    }
+}

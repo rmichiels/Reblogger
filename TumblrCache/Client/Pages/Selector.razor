@@ -1,0 +1,58 @@
+﻿@page "/flow/selector"
+
+@if (_blogSelection)
+{
+    foreach (var blog in User.Blogs)
+    {
+        <RetroButton Label="@blog.Name" OnClick="() => { SelectedBlog = User[User.Blogs.IndexOf(blog)]; State = FlowState.Archive;}" />
+    }
+    <RetroButton Label="Return" OnClick="() => _blogSelection=false" Variant="Variant.Action" />
+}
+else
+{
+    @if (User.Blogs.Count == 1)
+    {
+        <RetroButton Label="Your Blog" OnClick="() => { SelectedBlog = User[0]; State = FlowState.Archive; }" />
+    }
+    else
+    {
+        <RetroButton Label="Your Blogs" OnClick="() => _blogSelection = true" />
+    }
+    <RetroButton Label="Restore a deleted blog" OnClick="() => State = FlowState.Restore" />
+}
+<RetroButton Label="Log out" OnClick="() => State = FlowState.Landing" Variant="Variant.Danger" Style="margin-top:auto;" />
+
+
+@code {
+    private static bool _blogSelection = false;
+    private FlowState _state;
+    [Parameter]
+    public FlowState State
+    {
+        get => _state;
+        set
+        {
+            _state = value;
+            StateChanged.InvokeAsync(value);
+        }
+    }
+    [Parameter]
+    public EventCallback<FlowState> StateChanged { get; set; }
+
+    private Blog _blog;
+    [Parameter]
+    public Blog SelectedBlog
+    {
+        get => _blog;
+        set
+        {
+            _blog = value;
+            SelectedBlogChanged.InvokeAsync(value);
+        }
+    }
+    [Parameter]
+    public EventCallback<Blog> SelectedBlogChanged { get; set; }
+
+    [Parameter]
+    public User User { get; set; }
+}

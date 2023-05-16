@@ -1,0 +1,149 @@
+﻿:root {
+    --font-family: ulp-font, -apple-system, BlinkMacSystemFont, Roboto, Helvetica, sans-serif;
+    --primary-color: #FFC951;
+    --primary-color-accent: #FF6200;
+    --button-font-color: #ffffff;
+    --secondary-button-border-color: #c9cace;
+    --social-button-border-color: #c9cace;
+    --radio-button-border-color: #c9cace;
+    --secondary-button-text-color: #1e212a;
+    --link-color: #0070AD;
+    --title-font-color: #1e212a;
+    --font-default-color: #1e212a;
+    --widget-background-color: #ffffff;
+    --box-border-color: #c9cace;
+    --font-light-color: #65676e;
+    --input-text-color: #000000;
+    --input-border-color: #c9cace;
+    --border-default-color: #c9cace;
+    --input-background-color: #ffffff;
+    --icon-default-color: #65676e;
+    --error-color: #d03c38;
+    --error-text-color: #000000;
+    --success-color: #13a688;
+    --base-focus-color: #0070AD;
+    --transparency-focus-color: rgba(0, 112, 173, 0.15);
+    --base-hover-color: #000000;
+    --transparency-hover-color: rgba(0, 0, 0, var(--hover-transparency-value));
+    --button-border-width: 1px;
+    --social-button-border-width: 1px;
+    --radio-border-width: 1px;
+    --input-border-width: 1px;
+    --border-radius-outer: 5px;
+    --box-border-width: 0px;
+    --button-border-radius: 3px;
+    --radio-border-radius: 3px;
+    --spacing: 8px;
+    --spacing-1: var(--spacing);
+    --spacing-2: calc(var(--spacing)*2);
+    --spacing-3: calc(var(--spacing)*3);
+    --spacing-4: calc(var(--spacing)*4);
+    --spacing-5: calc(var(--spacing)*5);
+    --spacing-6: calc(var(--spacing)*6);
+    --spacing-6-5: calc(var(--spacing)*6.5);
+    --prompt-min-height: calc(var(--spacing)*67.5);
+    --prompt-width: calc(var(--spacing)*50);
+    --outer-padding: calc(var(--spacing)*10);
+    --prompt-min-height: calc(var(--spacing)*67.5);
+    --base-form-element-height: var(--spacing-6-5);
+    --button-height: var(--base-form-element-height);
+}
+
+@font-face {
+    font-family: 'morganite-black';
+    src: url('../lib/morganite-black.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'space-mono';
+    src: url('../lib/SpaceMono-Bold.ttf') format('truetype');
+}
+
+.TitleHero {
+    font-family: "morganite-black";
+    font-size: 14rem;
+}
+
+.icon {
+    width: 256px;
+    height: 256px;
+}
+
+.container-retro-table {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+    .container-retro-table::-webkit-scrollbar {
+        width: 14px;
+        background-color: transparent;
+    }
+
+    .container-retro-table::-webkit-scrollbar-button {
+        display: none;
+    }
+
+    .container-retro-table::-webkit-scrollbar-thumb {
+        border: 4px solid rgba(0, 0, 0, 0);
+        background-clip: padding-box;
+        background-color: #5200FF;
+    }
+
+.RetroTable {
+    font-family: "space-mono";
+}
+
+    .RetroTable tr {
+        border-bottom: 2px solid #3cffd0;
+    }
+
+        .RetroTable tr:last-child {
+            border-bottom: none;
+        }
+
+    .RetroTable td {
+        text-align: center;
+    }
+
+.padded-table td {
+    padding: 1rem;
+}
+
+.drag-drop-zone {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    border-width: 2px;
+    border-style: solid;
+    border-color: #FFC951;
+    align-items: center;
+    margin-bottom: 2px;
+    flex-direction: column;
+    border-radius: 3px;
+    transition: border-color .175s ease-in-out,box-shadow .175s ease-in-out;
+    height: 260px;
+    height: 260px;
+    position: relative;
+}
+
+    .drag-drop-zone:hover {
+        border-color: #FF6200;
+    }
+
+    .drag-drop-zone input[type=file] {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+a {
+    transition: color .175s ease-in-out;
+    text-decoration: none;
+    color: #5200FF;
+}
+
+    a:hover {
+        color: #3cffd0;
+    }

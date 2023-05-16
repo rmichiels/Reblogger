@@ -1,0 +1,69 @@
+﻿@layout EmptyLayout
+@page "/"
+@page "/flow"
+
+@switch (_cState)
+{
+    case ComponentState.Loading:
+        <SkeletonButton />
+        <SkeletonButton />
+        <SkeletonButton />
+        <SkeletonButton />
+        <SkeletonButton />
+        break;
+    case ComponentState.Interactive:
+        switch (State)
+        {
+            case FlowState.Landing:
+                <Landing />
+                break;
+
+            case FlowState.Selection:
+                <Selector @bind-State="@State" User="@_user" @bind-SelectedBlog="@SelectedBlog" />
+                break;
+
+            case FlowState.Archive:
+                <Archive @bind-State="@State" @bind-Blog="@SelectedBlog" />
+                break;
+
+            case FlowState.Restore:
+                <Restoration @bind-State="@State" />
+                break;
+        }
+        break;
+}
+
+@code {
+    [Parameter]
+    public FlowState State
+    {
+        get => _state;
+        set
+        {
+            _state = value;
+            StateHasChanged();
+        }
+    }
+
+    private User _user = null;
+    private List<Identifiable> _following = new();
+    private ComponentState _cState = ComponentState.Loading;
+    private FlowState _state;
+    private Blog SelectedBlog;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _cState = ComponentState.Loading;
+        if (Tumblr.User is not null)
+        {
+            _user = await Tumblr.GetUser();
+            _following = await Tumblr.GetFollowing();
+            State = FlowState.Selection;
+        }
+        else if (Tumblr.User is null)
+        {
+            _state = FlowState.Landing;
+        }
+        _cState = ComponentState.Interactive;
+    }
+}

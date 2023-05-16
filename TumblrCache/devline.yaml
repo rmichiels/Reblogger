@@ -1,0 +1,56 @@
+# ASP.NET
+# Build and test ASP.NET projects.
+# Add steps that publish symbols, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
+
+trigger:
+- dev
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+
+steps:
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet workload'
+  inputs:
+    command: custom
+    custom: 'workload '
+    arguments: 'install wasm-tools-net6 '
+- task: NuGetToolInstaller@1
+
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(solution)'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Building Client Artifact'
+  inputs:
+    command: 'build'
+    projects:  '**/TumblrCache.Client.csproj'
+    arguments: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\Client.zip"'
+    configuration: '$(Release)'
+
+- task: VSBuild@1
+  displayName: 'Building Server Artifact'
+  inputs:
+    solution: '**/TumblrCache.Server.csproj'
+    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\Server.zip" /p:DeployIisAppPath="Default Web Site"'
+    platform: '$(buildPlatform)'
+    configuration: '$(Release)'
+
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Artifact: Server'
+  inputs:
+    targetPath: $(build.artifactStagingDirectory)/Server.zip
+    artifactName: Server
+
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Artifact: Client'
+  inputs:
+    targetPath: '$(build.artifactStagingDirectory)/Client.zip'
+    artifactName: 'Client'

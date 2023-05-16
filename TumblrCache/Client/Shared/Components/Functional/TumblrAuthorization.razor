@@ -1,0 +1,32 @@
+﻿@using System.Text.Json;
+
+<RetroButton Label="Log in" OnClick="(() => Authorize())" />
+
+@code {
+    [Inject]
+    public NavigationManager Navigator { get; set; }
+    [Inject]
+    public HttpClient Client { get; set; }
+    private string consumerKey;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var bridge = await Client.GetAsync("api/vault/getKey");
+        consumerKey = await bridge.Content.ReadAsStringAsync();
+        Console.WriteLine(consumerKey);
+    }
+
+
+    private async Task Authorize()
+    {
+        var scopes = new List<string>() { "write", "offline_access" };
+        var scopesString = string.Join(" ", scopes);
+        Uri redirectUri = new(Navigator.BaseUri + "/redirect");
+        string state = Guid.NewGuid().ToString();
+
+        var authorizeUrlWRedirect = $"https://www.tumblr.com/oauth2/authorize?client_id={consumerKey}&redirect_uri={redirectUri}&response_type=code&scope={scopesString}&state={state}";
+        var authorizeNoRedirect = $"https://www.tumblr.com/oauth2/authorize?client_id={consumerKey}&response_type=code&scope={scopesString}&state={state}";
+
+        Navigator.NavigateTo(authorizeUrlWRedirect);
+    }
+}

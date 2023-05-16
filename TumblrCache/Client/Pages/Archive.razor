@@ -1,0 +1,64 @@
+﻿<div>
+    <img src="@Blog.Avatars[0].URL" class="icon" />
+    <br />
+    <span style="font-family:space-mono;font-size:1.5rem">@Blog.Name</span>
+    <table class="RetroTable padded-table">
+        <tbody>
+            <tr>
+                <td>
+                    Following
+                </td>
+                <td>
+                    @Tumblr.User.Following
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Followers
+                </td>
+                <td>
+                    @Blog.Followers
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <RetroButton Label="Back-Up" OnClick="() => Download(Blog)" Variant="Variant.Action" />
+                </td>
+                <td>
+                    <RetroButton Label="Return" OnClick="() => {Blog = null; State = FlowState.Selection;}" />
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+@code {
+    private ComponentState _cState;
+
+    private FlowState _state;
+    [Parameter]
+    public FlowState State
+    {
+        get => _state;
+        set
+        {
+            _state = value;
+            StateChanged.InvokeAsync(value);
+        }
+    }
+    [Parameter]
+    public EventCallback<FlowState> StateChanged { get; set; }
+
+    [Parameter]
+    public Blog Blog { get; set; }
+    [Parameter]
+    public EventCallback<Blog> BlogChanged { get; set; }
+
+    protected async Task Download(Blog blog)
+    {
+        Archiver.CreateArchiveFor(blog);
+        await Archiver.AddFollowingTo(Archiver[blog]);
+        await Archiver.DownloadArchiveFor(blog);
+    }
+}

@@ -1,0 +1,22 @@
+﻿
+<div align="center" class="container">
+    @ChildContent
+    <div style="
+        font-family:'space-mono';
+        position:absolute;
+        left:0;
+        right:0;
+        margin-left:auto;
+        margin-right:auto;
+       top:105%;
+    ">
+        A  <a href="https://www.tumblr.com/swissknifesolutions" target="_blank" rel="noopener noreferrer">Swissknifesolutions</a> Tool - @DateTime.Now.Year - <a href="https://github.com/rmichiels/Reblogger" target="_blank" rel="noopener noreferrer">Repository</a>
+    </div>
+</div>
+
+
+
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+}

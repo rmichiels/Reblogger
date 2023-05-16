@@ -1,0 +1,55 @@
+﻿<label class="mcui-checkbox" style="--active-colour:@ColourPalettes.PaletteWithVariants[Variant.Navigation][0];@FailedStyle">
+    <input type="checkbox" checked="@CheckedState">
+    <div>
+        <svg class="mcui-check" viewBox="-2 -2 35 35" aria-hidden="true">
+            <polyline points="7.57 15.87 12.62 21.07 23.43 9.93" />
+        </svg>
+    </div>
+    <div>@Label</div>
+</label>
+
+@code {
+    [Parameter]
+    public string? Label { get; set; }
+
+
+    private bool _checkedState = false;
+    [Parameter]
+    public bool? CheckedState
+    {
+        get => _checkedState;
+        set
+        {
+            if (value == false)
+            {
+                Failed = true;
+            }
+            if (value is null)
+            {
+                _checkedState = false;
+            }
+            if (value is true)
+            {
+                _checkedState = true;
+            }
+        }
+    }
+
+    [Parameter]
+    public bool Failed { get; set; } = false;
+
+    public string FailedStyle
+    {
+        get
+        {
+            if (Failed)
+            {
+                return $"--inactive-colour:{ColourPalettes.PaletteWithVariants[Variant.Danger][0]};";
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
+    }
+}

@@ -1,0 +1,39 @@
+
+trigger:
+- release
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+
+steps:
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet workload'
+  inputs:
+    command: custom
+    custom: 'workload '
+    arguments: 'install wasm-tools-net6 '
+- task: NuGetToolInstaller@1
+
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(solution)'
+
+- task: VSBuild@1
+  inputs:
+    solution: '$(solution)'
+    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)\Reblogger.zip"'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Artifact: Client'
+  inputs:
+    targetPath: '$(build.artifactStagingDirectory)/Reblogger.zip'
+    artifactName: 'Reblogger'
+

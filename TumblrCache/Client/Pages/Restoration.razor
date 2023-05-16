@@ -1,0 +1,116 @@
+﻿@layout EmptyLayout
+@page "/restoration"
+
+@switch (_step)
+{
+    case Step.Upload:
+        <ZipUpload FileChanged="@Unzip" />
+        break;
+    case Step.Followers:
+        <div class="container-retro-table">
+            <EditForm Model="@_followingArchive">
+                <table class="RetroTable w-100">
+                    <tbody tabindex="0">
+                        @foreach (var kvp in _followingArchive)
+                        {
+                            <tr class="retro-table-row">
+                                <td style="text-align:left;">
+                                    @kvp.Key
+                                </td>
+                                <td>
+                                    <RetroCheckBox CheckedState="@_followingArchive[kvp.Key]" />
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </EditForm>
+        </div>
+        <RetroButton Variant="Variant.Danger" Label="Follow" OnClick="() => RestoreFollowing()" Disabled="@_disableFollow" />
+        break;
+}
+
+<div class="d-flex align-content-around gap-4">
+    <RetroButton Label="Continue" OnClick="() => {_step = _step + 1; _disableContinue = true;}" Variant="Variant.Action" Disabled="@_disableContinue" />
+    <RetroButton Label="Return" OnClick="() => StepBack()" />
+</div>
+
+@code {
+    private FlowState _state;
+    [Parameter]
+    public FlowState State
+    {
+        get => _state;
+        set
+        {
+            _state = value;
+            StateChanged.InvokeAsync(value);
+        }
+    }
+    [Parameter]
+    public EventCallback<FlowState> StateChanged { get; set; }
+
+    public MemoryStream Stream { get; set; } = new();
+
+    private Step _step = Step.Upload;
+    private enum Step
+    {
+        Upload,
+        //Blog,
+        Followers,
+        //Posts
+    }
+    private List<ZipArchiveEntry> _entries = new();
+    private Dictionary<Identifiable, bool?> _followingArchive = new();
+
+    private bool _disableFollow = false;
+    private bool _disableContinue = true;
+
+    private async Task RestoreFollowing()
+    {
+        foreach (Identifiable i in _followingArchive.Keys)
+        {
+            var bridge = await Tumblr.FollowBlog(i);
+            _followingArchive[i] = bridge;
+            StateHasChanged();
+        }
+        await Tumblr.GetUser();
+        _disableFollow = true;
+    }
+
+
+    private async Task Unzip(IBrowserFile file)
+    {
+
+        _entries = new();
+        await file.OpenReadStream().CopyToAsync(Stream);
+        using (var zip = new ZipArchive(Stream, ZipArchiveMode.Read, true))
+        {
+            foreach (var entry in zip.Entries)
+            {
+                Console.WriteLine(entry.Name);
+                _entries.Add(entry);
+                if (entry.Name.Contains("following.json"))
+                {
+                    var bridge = entry.DeserializeJsonEntryAs<List<Identifiable>>();
+                    bridge.OrderBy(e => e.Name).ToList().ForEach(i => _followingArchive.Add(i, null));
+                }
+            }
+        }
+        _disableContinue = false;
+    }
+
+
+    private async Task StepBack()
+    {
+        switch (_step)
+        {
+            case Step.Upload:
+                State = FlowState.Selection;
+                break;
+            default:
+                _step = _step - 1;
+                break;
+        }
+    }
+}

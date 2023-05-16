@@ -1,0 +1,73 @@
+﻿@page "/upload"
+@using System.IO.Compression;
+
+<div class="drag-drop-zone" @ondragenter="OnDragEnter" @ondragleave="OnDragLeave" @ondragover="OnDragEnter" @ondrop="OnDragLeave">
+    <InputFile class="drop-zone" OnChange="@Upload" />
+    @if (entries.Count > 0)
+    {
+        <table class="RetroTable padded-table">
+            <tbody>
+                @foreach (string item in entries)
+                {
+                    <tr>
+                        <td>
+                            @item
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div style="font-family:'space-mono'">
+            Drag & drop blog archive <br> or <br> click to select
+        </div>
+    }
+</div>
+
+<div class="error-message-container flex-grow-1" style="font-family:'space-mono'">
+    <p>@ErrorMessage</p>
+</div>
+
+@code {
+    [Parameter]
+    public List<string> AllowedContentTypes { get; set; } = new()
+    {
+        "application/zip",
+        "application/x-zip-compressed"
+    };
+
+    [Parameter]
+    public EventCallback<IBrowserFile> FileChanged { get; set; }
+
+    private List<string> entries = new();
+    private string filePath = string.Empty;
+
+    private string ErrorMessage = string.Empty;
+    private string HoverClass;
+    void OnDragEnter(DragEventArgs e) => HoverClass = "hover";
+    void OnDragLeave(DragEventArgs e) => HoverClass = string.Empty;
+
+    async Task Upload(InputFileChangeEventArgs e)
+    {
+        ErrorMessage = string.Empty;
+        MemoryStream bridge = new();
+        await e.File.OpenReadStream().CopyToAsync(bridge);
+        if (AllowedContentTypes.Contains(e.File.ContentType))
+        {
+            using (var zip = new ZipArchive(bridge, ZipArchiveMode.Read))
+            {
+                foreach (var entry in zip.Entries)
+                {
+                    entries.Add(entry.Name);
+                }
+            };
+        }
+        else
+        {
+            ErrorMessage = $"'{e.File.ContentType}' is currently not supported by Re:blogger";
+        }
+        FileChanged.InvokeAsync(e.File);
+    }
+}

@@ -1,0 +1,50 @@
+﻿.file-drop-zone {
+    display: flex;
+    width: 100%;
+    border-width: 2px;
+    border-style: solid;
+    border-color: #FFC951;
+    align-items: center;
+    margin-bottom: 2px;
+    flex-direction: column;
+    border-radius: 3px;
+    transition: border-color .175s ease-in-out,box-shadow .175s ease-in-out;
+}
+
+table {
+    padding: 0;
+    margin: 0;
+}
+
+    table tr:last-child td {
+        border-bottom: none;
+    }
+
+.hover {
+    border-color: #FF6200;
+}
+
+::deep input[type=file] {
+    width: 100%;
+    padding: 20px;
+}
+
+.error-message-container {
+    color: red;
+    text-align: center;
+}
+
+.drop-zone {
+    display: flex;
+    height: 100%;
+    width: 100%
+}
+
+pre {
+    background-color: #f0f0f0;
+    overflow: auto;
+    padding: 1rem;
+    height: 10rem;
+}
+
+

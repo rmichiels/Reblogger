@@ -1,0 +1,48 @@
+﻿@if (Followers.Count > 0)
+{
+    <dl>
+        @foreach (IBlog b in Followers)
+        {
+            <dt>@b.Name</dt>
+            <dd>@b.Title</dd>
+            <dd>@b.Description.Replace("<p>","").Replace("</p>", System.Environment.NewLine )</dd>
+        }
+    </dl>
+}
+
+@code {
+    [Inject]
+    public TumblrClient API { get; set; }
+    [Parameter]
+    public Blog Blog { get; set; }
+
+
+    private List<IBlog> Followers = new List<IBlog>();
+    private List<Identifiable> Blocklist = new List<Identifiable>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var bridge = await Blog.GetFollowers();
+        Console.WriteLine(bridge.Count);
+        foreach (Identifiable i in bridge)
+        {
+            var blog = await API.GetBlogInfo(i);
+            if (API.Blockables.Contains(blog.Title.ToLower()))
+            {
+                Blocklist.Add(blog as Identifiable);
+                Console.WriteLine(Blocklist.Count);
+            }
+            else
+            {
+                Followers.Add(blog);
+                StateHasChanged();
+            }
+        }
+
+        // Disabled due to possibly API related bug
+        if (Blocklist.Count > 0)
+        {
+            await API.BlockBulkFor(Blog, Blocklist);
+        }
+    }
+}

@@ -1,0 +1,22 @@
+﻿<button onclick="@OnClick" class="retrobutton rb-shadowed" style="--primary:@PrimaryColour;--accent:@AccentColour;@Style" disabled="@Disabled">
+    @Label
+</button>
+
+@code {
+    [Parameter]
+    public string Label { get; set; } = "button";
+    [Parameter]
+    public EventCallback OnClick { get; set; }
+
+    [Parameter]
+    public Variant Variant { get; set; } = Variant.Navigation;
+
+    [Parameter]
+    public bool Disabled { get; set; } = false;
+
+    [Parameter]
+    public string Style { get; set; } = string.Empty;
+
+    public string PrimaryColour { get => ColourPalettes.PaletteWithVariants[Variant][0]; }
+    public string AccentColour { get => ColourPalettes.PaletteWithVariants[Variant][1]; }
+}
